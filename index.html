@@ -564,7 +564,7 @@ function heur(t){const r={};const g=(re)=>{const m=t.match(re);return m?m[1].tri
  r.rastreio=g(/\b([A-Z]{2}\d{9}BR)\b/)||g(/\b(BR\d{10,}[A-Z]?)\b/)||g(/\b(SPX[A-Z0-9]{6,})\b/i)||g(/\b(MEL[A-Z0-9]{6,})\b/);
  if(r.pedido&&r.rastreio&&r.pedido===r.rastreio)r.pedido=null;
  if(!r.pedido){const e=t.match(/envio\s*[:#nº°]*\s*(\d[\d ]{6,22}\d)/i);if(e)r.pedido=e[1].replace(/\s+/g,'')}
- r.cliente=g(/destinat[áa]rio\s*[:\-]?\s*([^\n]{3,60})/i);
+ r.cliente=((t)=>{const L=t.split(/\n/).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);for(let i=1;i<L.length;i++)if(/^(endere[çc]o|end\.?|rua|cep)\b/i.test(L[i])){let n=L[i-1].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();if(n.length>=3&&!/\d|:/.test(n))return n}return null})(t)||g(/destinat[áa]rio\s*[:\-]?\s*([^\n]{3,60})/i);
  r.data_pedido=g(/(?:data\s*(?:do|da|de)?\s*(?:pedido|venda|compra)|comprado\s*em|order\s*date|criado\s*em)\s*[:\-]?\s*(\d{1,2}[\/\.\-]\d{1,2}(?:[\/\.\-]\d{2,4})?|\d{1,2}\s*(?:de\s*)?[a-zç]{3,9}\.?(?:\s*(?:de\s*)?\d{2,4})?)/i);
  r.modalidade=/flex/i.test(t)?'Mercado Envios Flex':/mercado\s*(envios|livre)/i.test(t)?'Mercado Livre Envios':/shopee\s*xpress|\bSPX\b/i.test(t)?'Shopee Xpress':/sedex/i.test(t)?'Correios SEDEX':/\bPAC\b/.test(t)?'Correios PAC':/correios/i.test(t)?'Correios':/coleta/i.test(t)?'Coleta':null;
  r.cor=g(/\bcor\s*[:\-]\s*([A-Za-zÀ-ú][A-Za-zÀ-ú ]{2,24}?)(?=\s*(?:[,;|\n]|tam|$))/i);
