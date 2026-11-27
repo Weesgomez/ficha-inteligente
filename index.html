@@ -707,7 +707,7 @@ document.addEventListener('click',e=>{if(readyPages&&e.target.closest('#form but
 pBtn.addEventListener('click',async()=>{if(drag)return;
  if(readyPages){const n=readyPages.length;const ok=await printNow(n);if(ok){resetPrintBtn();donePages(n)}else toast('O Chrome não abriu a janela de impressão. Use SALVAR PDF e imprima o arquivo.',6000);return}
  busy(true);try{const pages=await allPages();
-  $('#printArea').innerHTML=pages.map(u=>`<img src="${u}" alt="">`).join('');
+  for(const i of $$('#printArea img'))URL.revokeObjectURL(i.src);$('#printArea').innerHTML=pages.map(u=>`<img src="${URL.createObjectURL(d2b(u))}" alt="">`).join('');
   await Promise.all([...$$('#printArea img')].map(i=>i.decode().catch(()=>{})));
   if(await printNow(pages.length)){donePages(pages.length);return}
   if(window.claude){toast('A impressão direta foi bloqueada aqui — gerando o PDF para você imprimir.',4500);await savePdf(pages);return}
