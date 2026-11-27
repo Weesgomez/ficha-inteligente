@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ficha Inteligente – Polo</title>
+<script>try{var __t=localStorage.getItem("ficha_theme");if(__t)document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -12,16 +13,16 @@
    PICTURE: a folha A4 com as polos e as artes aplicadas
    COLOUR and TYPE: azul-marinho da ficha, branco, preto; Inter
    LAYOUT: passos à esquerda, folha fixa à direita; empilha no celular */
-:root{color-scheme:light dark;--bg:light-dark(#e9eef7,#0b1122);--card:light-dark(#fff,#141c33);--ink:light-dark(#0f172a,#e6ebf5);--mut:light-dark(#5b6782,#9aa6c2);--line:light-dark(#d6deec,#26314f);--navy:#123f93;--blue:#2d6cdf;--soft:light-dark(#dbe8fd,#1b2a52);--warn:#b45309;--warnbg:light-dark(#fff4e0,#3a2a10);--ok:#15803d}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+:root{color-scheme:dark;--bg:#08090c;--bgr:radial-gradient(1200px 560px at 15% -12%,rgba(59,130,246,.10),transparent 60%),radial-gradient(900px 480px at 100% 0%,rgba(34,211,238,.06),transparent 55%);--card:#131519;--card2:#191c22;--ink:#eef1f7;--mut:#9aa2b1;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16);--navy:#3b82f6;--blue:#3b82f6;--soft:rgba(59,130,246,.14);--warn:#f59e0b;--warnbg:rgba(245,158,11,.12);--ok:#22c55e;--hdr:rgba(10,11,15,.75);--font:-apple-system,BlinkMacSystemFont,Inter,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+:root[data-theme=light]{color-scheme:light;--bg:#EEF1F8;--bgr:radial-gradient(1200px 560px at 15% -12%,rgba(59,130,246,.07),transparent 60%),radial-gradient(900px 480px at 100% 0%,rgba(34,211,238,.05),transparent 55%);--card:#fff;--card2:#F7F8FC;--ink:#171B2E;--mut:#5B6178;--line:rgba(23,27,46,.10);--line2:rgba(23,27,46,.18);--navy:#2F5597;--blue:#2F5597;--soft:rgba(47,85,151,.10);--warn:#b45309;--warnbg:#fff4e0;--ok:#1E9E5B;--hdr:rgba(255,255,255,.8)}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip}
+body{margin:0;background:var(--bg);background-image:var(--bgr);background-attachment:fixed;color:var(--ink);font:15px/1.5 var(--font);overflow-x:clip;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
-.top{background:var(--navy);color:#fff;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px max(3vw,14px)}
-.top h1{font-size:20px;margin:0;font-weight:800;letter-spacing:-.01em;flex:1 1 220px}
-.top h1 small{font-weight:600;font-size:13px;background:#ffffff26;border-radius:20px;padding:3px 10px;margin-left:8px;vertical-align:2px}
-.tb{background:#ffffff1f;border:1px solid #ffffff40;color:#fff;border-radius:10px;padding:9px 14px;min-height:44px;cursor:pointer;font-weight:600}
-.tb:hover{background:#ffffff33}
+.top{background:var(--hdr);backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line);color:var(--ink);display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px max(3vw,14px);position:sticky;top:0;z-index:15}
+.top h1{font-size:17px;margin:0;font-weight:650;letter-spacing:-.005em;flex:1 1 220px}
+.top h1 small{font-weight:600;font-size:12px;background:var(--soft);color:var(--blue);border-radius:20px;padding:3px 10px;margin-left:8px;vertical-align:2px}
+.tb{background:var(--card2);border:1px solid var(--line2);color:var(--mut);border-radius:9px;padding:9px 14px;min-height:40px;cursor:pointer;font-weight:600;font-size:13px}
+.tb:hover{background:var(--card);color:var(--ink)}
 .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:20px;padding:20px max(3vw,14px);max-width:1400px;margin:auto}
 @media(max-width:980px){.wrap{grid-template-columns:minmax(0,1fr)}.pv{position:static!important}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
@@ -34,15 +35,15 @@ button,input,select,textarea{font:inherit;color:inherit}
 .st{font-size:14px;color:var(--mut);margin-top:8px;min-height:20px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:12px}
 label.f{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;color:var(--mut)}
-label.f input,label.f select,textarea{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:9px 11px;font-size:16px;min-height:44px;font-weight:500;color:var(--ink)}
+label.f input,label.f select,textarea{border:1.5px solid var(--line);background:var(--card2);border-radius:10px;padding:9px 11px;font-size:16px;min-height:44px;font-weight:500;color:var(--ink)}
 input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #2d6cdf66;outline-offset:1px}
 .pend input{border-color:var(--warn);background:var(--warnbg)}
 .pend::after{content:attr(data-w);color:var(--warn);font-size:12px;font-weight:600}
 .dup{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:8px 12px;font-size:14px;margin-top:10px}
 .dup button{border:0;background:none;color:var(--blue);font-weight:700;cursor:pointer;text-decoration:underline;padding:0 4px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{min-width:56px;min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:800;cursor:pointer;font-size:16px}
-.cores{display:flex;flex-wrap:wrap;gap:6px}.cor{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:0 10px 0 6px;border-radius:20px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-size:14px;font-weight:600}.cor i{width:22px;height:22px;border-radius:50%;border:1px solid #0003;flex:none}.cor.on{border-color:var(--navy);box-shadow:0 0 0 2px var(--blue) inset}
+.chip{min-width:56px;min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--card2);font-weight:800;cursor:pointer;font-size:16px}
+.cores{display:flex;flex-wrap:wrap;gap:6px}.cor{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:0 10px 0 6px;border-radius:20px;border:1.5px solid var(--line);background:var(--card2);cursor:pointer;font-size:14px;font-weight:600}.cor i{width:22px;height:22px;border-radius:50%;border:1px solid #0003;flex:none}.cor.on{border-color:var(--navy);box-shadow:0 0 0 2px var(--blue) inset}
 .dup .cor{color:var(--ink);text-decoration:none;padding:0 10px 0 6px;font-weight:600}.chip.mod{padding:0 16px}.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
 .qty{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:12px}
 .q{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:12px;padding:4px 6px}
@@ -50,9 +51,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #
 .q input{width:100%;border:0;background:none;text-align:center;font-size:18px;font-weight:700;min-height:40px}
 .q button{width:36px;height:36px;border-radius:9px;border:0;background:var(--soft);font-weight:800;cursor:pointer;flex:none}
 .tot{margin-top:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
-.tot span{font-size:24px;color:var(--navy)}
-:root[data-theme=dark] .tot span{color:#8fb4ff}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .tot span{color:#8fb4ff}}
+.tot span{font-size:24px;color:var(--blue)}
 details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--mut);min-height:32px}
 .art{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;border:1.5px solid var(--line);border-radius:12px;padding:10px;margin-top:10px}
 .art.need{border-color:var(--warn);background:var(--warnbg)}
@@ -61,16 +60,16 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
 .th img{max-width:100%;max-height:100%}
 .art .nm{font-size:14px;font-weight:700;overflow-wrap:anywhere}
 .art .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px;font-size:13px}
-.art select{min-height:40px;border-radius:9px;border:1.5px solid var(--line);background:var(--card);padding:4px 8px;font-size:15px;flex:1 1 220px}
+.art select{min-height:40px;border-radius:9px;border:1.5px solid var(--line);background:var(--card2);padding:4px 8px;font-size:15px;flex:1 1 220px}
 .art.need select{border-color:var(--warn)}
 .art input[type=range]{flex:1 1 120px}
-.sm{border:1.5px solid var(--line);background:var(--card);border-radius:9px;min-height:36px;padding:4px 10px;cursor:pointer;font-size:13px;font-weight:600}
+.sm{border:1.5px solid var(--line);background:var(--card2);border-radius:9px;min-height:36px;padding:4px 10px;cursor:pointer;font-size:13px;font-weight:600}
 .sm.on{background:var(--soft);border-color:var(--blue)}
 .tag{font-size:11px;font-weight:700;background:var(--soft);border-radius:6px;padding:1px 6px;margin-left:6px}
 .hint{font-size:13px;color:var(--mut);margin-top:8px}
 .pv{position:sticky;top:12px;align-self:start}
 .bar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.act{min-height:50px;border-radius:12px;border:0;font-weight:800;font-size:15px;letter-spacing:.02em;cursor:pointer;background:var(--card);border:2px solid var(--navy);color:var(--ink)}
+.act{min-height:50px;border-radius:12px;border:0;font-weight:800;font-size:15px;letter-spacing:.02em;cursor:pointer;background:var(--card2);border:2px solid var(--navy);color:var(--ink)}
 .act.pri{background:var(--navy);color:#fff}
 .act:disabled{opacity:.6;cursor:wait}
 .miss{font-size:13px;color:var(--warn);font-weight:600;margin:-2px 0 8px;min-height:18px}
@@ -98,8 +97,9 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
 <header class="top">
   <h1>Ficha Inteligente de Produção <small id="hModel">Camisa Polo</small></h1>
   <button class="tb" id="bNew">+ Nova ficha</button>
-  <button class="tb" id="bHist">Histórico</button>
+  <button class="tb" id="bHist">🔎 Consultar fichas</button>
   <button class="tb" id="bCfg">Padrões</button>
+  <button class="tb" id="bTheme" title="Alternar tema claro/escuro">☀️ Claro</button>
 </header>
 <main class="wrap">
 <section id="form">
@@ -176,8 +176,9 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
 </div>
 
 <div class="modal" id="mHist"><div class="box">
-  <h3>Histórico de fichas <button class="x" data-close>✕</button></h3>
-  <label class="f">Pesquisar por pedido ou cliente<input id="hq" autocomplete="off"></label>
+  <h3>🔎 Consultar fichas <button class="x" data-close>✕</button></h3>
+  <label class="f">Buscar pelo nome do cliente ou número do pedido<input id="hq" autocomplete="off" placeholder="Ex.: Maria, 261127CEB92S2X, 4862…"></label>
+  <div class="hint" id="hInfo"></div>
   <div id="hl" style="margin-top:10px"></div>
 </div></div>
 
@@ -186,6 +187,8 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
   <div class="grid" id="cfgF"></div>
   <h4 style="margin:18px 0 4px">Tamanho visual padrão das estampas (% da largura da peça)</h4>
   <div class="grid" id="cfgS"></div>
+  <h4 style="margin:18px 0 4px">Fichas guardadas</h4>
+  <div class="grid"><label class="f">Apagar fichas automaticamente depois de<select id="cfgRet"><option value="30">30 dias</option><option value="60">60 dias</option></select></label></div>
   <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button class="act pri" id="cfgSave" style="padding:0 22px">Salvar padrões</button></div>
 </div></div>
 
@@ -267,8 +270,8 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 function mergeCfg(base,c){if(!c)return base;const out=clone(base);c=clone(c);if(!(c.v>=2))for(const m in c)if(c[m]&&c[m].w){delete c[m].w.cs;delete c[m].w.cc}
  if(c.cor!==undefined&&!c.polo){c={polo:c}}
  for(const m in MODELS)if(c[m])out[m]={...out[m],...c[m],w:{...out[m].w,...(c[m].w||{})}};
- if(c.lastModel&&MODELS[c.lastModel])out.lastModel=c.lastModel;out.v=2;return out}
-let cfg={v:2,polo:clone(MODELS.polo.def),camiseta:clone(MODELS.camiseta.def),babylook:clone(MODELS.babylook.def),regata:clone(MODELS.regata.def),moletom:clone(MODELS.moletom.def)};
+ if(c.lastModel&&MODELS[c.lastModel])out.lastModel=c.lastModel;if(c.ret)out.ret=+c.ret;out.v=2;return out}
+let cfg={v:2,ret:30,polo:clone(MODELS.polo.def),camiseta:clone(MODELS.camiseta.def),babylook:clone(MODELS.babylook.def),regata:clone(MODELS.regata.def),moletom:clone(MODELS.moletom.def)};
 try{cfg=mergeCfg(cfg,JSON.parse(localStorage.getItem('ficha_cfg')||'null'))}catch(e){}
 if(cfg.lastModel){curModel=cfg.lastModel;M=MODELS[curModel];POS=M.pos;LOCS=M.locs}
 const C=()=>cfg[curModel];
@@ -527,12 +530,12 @@ function drop(el,input,fn){el.addEventListener('dragover',e=>{e.preventDefault()
 
 /* ---------- label reading ---------- */
 const LABEL_PROMPT=`Você lê etiquetas de envio do Brasil (Mercado Livre, Shopee, Correios, Jadlog, Loggi, coleta etc.). Leia a etiqueta (imagem e/ou texto abaixo) e responda SOMENTE um objeto JSON com estas chaves:
-{"cliente": string|null, "pedido": string|null, "data_pedido": "dd/mm/aaaa"|null, "modalidade": string|null, "transportadora": string|null, "plataforma": string|null, "rastreio": string|null, "cor": string|null, "itens": [{"tamanho": "PP"|"P"|"M"|"G"|"GG"|"XG"|"XXG", "quantidade": number, "cor": string|null, "modelo": "polo"|"camiseta"|"babylook"|"regata"|"moletom"|null, "estampa": string|null}], "etiqueta": string|null}
+{"cliente": string|null, "pedido": string|null, "data_pedido": "dd/mm/aaaa"|null, "modalidade": string|null, "transportadora": string|null, "plataforma": string|null, "rastreio": string|null, "cor": string|null, "observacao": string|null, "itens": [{"tamanho": "PP"|"P"|"M"|"G"|"GG"|"XG"|"XXG", "quantidade": number, "cor": string|null, "modelo": "polo"|"camiseta"|"babylook"|"regata"|"moletom"|null, "estampa": string|null}], "etiqueta": string|null}
 Regras:
 - Nunca invente. Se o dado não estiver escrito na etiqueta, use null.
 - cor = cor da PEÇA vendida, só se aparecer escrita na etiqueta (descrição do produto, variação, SKU, DANFE simplificada, conteúdo da embalagem; ex.: "Cor: Preto", "Camisa Polo Azul Marinho P"). Devolva só o nome da cor (ex.: "Preta", "Azul marinho", "Cinza mescla"). Não use cor do logotipo, da estampa ou da própria etiqueta.
 - itens = lista de produtos da etiqueta. Nas etiquetas desta loja cada item vem numa linha como "1. m-criarestampa-over *1": a PRIMEIRA sigla antes do hífen é o TAMANHO (pp, p, m, g, gg, xg/eg, xxg/egg/exg) e o número depois do asterisco (*1, *2…) é a QUANTIDADE. O restante do código descreve o produto e pode trazer o MODELO (polo, camiseta, babylook/baby look/feminina, regata, moletom/canguru) e a COR da peça no final (ex.: "1. m-LOGO-polo-branco *1" = tamanho M, 1 unidade, modelo polo, cor Branca; "2. m-LOGO-polo-azul *1" = M, 1, polo, Azul). estampa = o nome/código da estampa no SKU, sem tamanho, modelo e cor (ex.: "m-LOGO-polo-branco" → "LOGO"; "g-caveira-over-preto" → "caveira"). Itens do mesmo pedido podem ter CORES ou ESTAMPAS DIFERENTES: informe cor e estampa de cada item separadamente e não junte itens diferentes. Se o item não tiver cor escrita, use cor null. Regras de MODELO desta loja: "polo" = polo; "over"/"oversized"/"regata" = regata (Regata Oversized); "baby"/"babylook"/"baby look"/"feminina" = babylook; "blusa"/"moletom"/"canguru" = moletom; se o código NÃO indicar nenhum modelo, use "camiseta". Leia todas as linhas assim. Se o tamanho não estiver claro, não inclua o item; se não houver itens, use [].
-- cliente = nome do DESTINATÁRIO (quem recebe), nunca o remetente ou a loja.
+- observacao = nota interna de produção escrita na etiqueta (ex.: \"Internal: titan frente centro, somente simbolo costas\" → \"titan frente centro, somente simbolo costas\"); null se não houver. - cliente = nome do DESTINATÁRIO (quem recebe), nunca o remetente ou a loja. Em etiquetas sem o rótulo "Destinatário", o nome é a linha logo acima de "Endereço:" (ex.: "Vitor Magson (VITORMAGSON)" → "Vitor Magson"; tire o apelido entre parênteses).
 - pedido = número do pedido ou da venda (rótulos como "Venda", "Pedido", "Pack ID", "Order ID", "Nº do pedido"). Se nenhum desses aparecer, use o número rotulado "Envio:" (etiqueta do Mercado Livre, ex.: "Envio: 48630896794" → "48630896794"; os últimos dígitos podem estar em fonte maior — junte todos os dígitos, sem espaços). NÃO use código de rastreio (ex.: AA123456789BR, BR..., SPX..., MEL...), número da etiqueta/volume, número de NF, chave de acesso, CEP ou telefone.
 - rastreio = código de rastreamento, se houver. etiqueta = número da etiqueta/volume, se houver.
 - data_pedido = data do pedido/venda/compra, em qualquer formato que aparecer (ex.: "Venda: 20/11", "Data da venda", "Comprado em 20 nov", "Data do pedido", "Order date", "Criado em"). Devolva como dd/mm/aaaa; se a etiqueta não mostrar o ano, devolva só dd/mm. NÃO use data de emissão, impressão, postagem, envio, despacho, coleta, previsão de entrega ou validade da etiqueta.
@@ -720,14 +723,16 @@ $('#aEdit').addEventListener('click',()=>{const f=$('.pend input')||$('.art.need
 /* ---------- history ---------- */
 async function histCol(){const k=await caps();if(k.db&&k.uid)return k.db.collection('data/users/'+k.uid);return null}
 function lsHist(){try{return JSON.parse(localStorage.getItem('ficha_hist')||'[]')}catch(e){return[]}}
-async function loadHist(){const col=await histCol();if(col){try{const s=await col.where('kind','==','ficha').get();hist=s.docs.map(d=>d.data()).filter(Boolean);hist.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));return}catch(e){}}hist=lsHist()}
+const RETD=()=>+cfg.ret||30;const expIn=h=>Math.ceil(((h.updatedAt||h.createdAt||0)+RETD()*864e5-Date.now())/864e5);
+async function loadHist(){const col=await histCol();let fromDb=false;if(col){try{const s=await col.where('kind','==','ficha').get();hist=s.docs.map(d=>d.data()).filter(Boolean);fromDb=true}catch(e){}}if(!fromDb)hist=lsHist();hist.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+ const old=hist.filter(h=>expIn(h)<=0);if(old.length){hist=hist.filter(h=>expIn(h)>0);if(fromDb){for(const h of old){try{await col.doc('ficha_'+h.id).delete()}catch(e){}}}else{try{localStorage.setItem('ficha_hist',JSON.stringify(hist))}catch(e){}}}}
 let saving=false;
 async function saveHist(canvas,quiet){if(saving)return;saving=true;try{const k=await caps();const now=Date.now();if(!st.id)st.id='f'+now.toString(36)+Math.random().toString(36).slice(2,6);
  const arts=[];let inline=!k.assets;
  const up=new Map();for(const a of st.arts)if(a.assetId)up.set(a.data,a.assetId);
  for(const a of st.arts){if(!a.assetId&&up.has(a.data))a.assetId=up.get(a.data);if(!inline&&!a.assetId){try{const r=await k.assets.upload(d2b(a.data));a.assetId=r.id;up.set(a.data,r.id)}catch(e){inline=true}}
   const o={name:a.name,pos:a.pos,cx:a.cx,cy:a.cy,w:a.w,rot:a.rot||0,aspect:a.aspect,useNobg:a.useNobg};
-  if(a.assetId)o.assetId=a.assetId;else{const im=await loadImg(a.data);const s=Math.min(1,500/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);o.inline=c.toDataURL('image/png')}
+  if(a.assetId)o.assetId=a.assetId;else{const im=await loadImg(a.data);const s=Math.min(1,420/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);o.inline=c.toDataURL('image/webp',.82);if(!o.inline.startsWith('data:image/webp'))o.inline=c.toDataURL('image/png')}
   arts.push(o)}
  let fichaAsset=null;if(k.assets&&canvas){try{fichaAsset=(await k.assets.upload(await toBlob(canvas,'image/jpeg',.9))).id}catch(e){}}
  const doc={kind:'ficha',id:st.id,createdAt:st.createdAt||now,updatedAt:now,cliente:st.cliente,pedido:st.pedido,data:st.data,dataSrc:st.dataSrc,vars:st.vars?st.vars.map((x,i)=>i===st.varIdx?{cor:st.cor,est:x.est||'',grade:st.grade,id:st.id,modelo:curModel}:{cor:x.cor,est:x.est||'',grade:x.grade,id:x.id||null,modelo:x.modelo||null}):null,varIdx:st.varIdx||0,modalidade:st.modalidade,transportadora:st.transportadora,plataforma:st.plataforma,rastreio:st.rastreio,
@@ -736,7 +741,7 @@ async function saveHist(canvas,quiet){if(saving)return;saving=true;try{const k=a
  if(JSON.stringify(doc).length>240000){doc.arts=arts.map(({inline,...r})=>r);doc.semArtes=true}
  const col=await histCol();let ok=false;
  if(col){try{await col.doc('ficha_'+st.id).set(doc);ok=true}catch(e){}}
- if(!ok){try{const h=lsHist().filter(x=>x.id!==doc.id);h.unshift(doc);localStorage.setItem('ficha_hist',JSON.stringify(h.slice(0,60)));ok=true}catch(e){}}
+ if(!ok){try{const h=lsHist().filter(x=>x.id!==doc.id);h.unshift(doc);let n=Math.min(h.length,500);for(;;){try{localStorage.setItem('ficha_hist',JSON.stringify(h.slice(0,n)));ok=true;break}catch(e){if(n<=1)break;n=Math.max(1,Math.floor(n*.85))}}}catch(e){}}
  if(ok){const i=hist.findIndex(x=>x.id===doc.id);if(i>=0)hist[i]=doc;else hist.unshift(doc);
   if(quiet){if(st.vars)stash()}else if(st.vars){stash();renderVars();const nx=st.vars.findIndex(x=>!x.id);toast(nx>=0?`Folha ${st.varIdx+1} salva. Falta a folha ${nx+1} (${vLabel(st.vars[nx],nx)}) — clique nela no passo 2.`:'Folha salva. Todas as folhas deste pedido estão prontas.',5000)}else toast('Ficha salva no histórico.')}else toast('Não foi possível salvar no histórico.')}
  finally{saving=false}}
@@ -745,8 +750,8 @@ function checkDup(){const p=nrm(st.pedido);const box=$('#dup');if(!p){box.innerH
  const m=hist.filter(h=>h.id!==st.id&&nrm(h.pedido)===p&&(!h.cor||!st.cor||nrm(h.cor)===nrm(st.cor)));
  box.innerHTML=m.length?`<div class="dup">⚠ Já existe ficha para o pedido <b>${esc(st.pedido)}</b> (${esc(m[0].cliente||'sem cliente')}, salva em ${new Date(m[0].updatedAt).toLocaleDateString('pt-BR')}). <button data-open="${esc(m[0].id)}">Abrir a anterior</button> ou continue para criar reimpressão/complemento.</div>`:''}
 $('#dup').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)openFicha(b.dataset.open)});
-function renderHist(){const q=nrm($('#hq').value);const l=hist.filter(h=>!q||nrm(h.pedido).includes(q)||nrm(h.cliente).includes(q));
- $('#hl').innerHTML=l.length?l.map(h=>`<div class="hr"><div><b>${esc(h.pedido||'Sem pedido')}</b> — ${esc(h.cliente||'sem cliente')}<div class="m">${esc((MODELS[h.modelo||'polo']||MODELS.polo).nome)} · ${new Date(h.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})} · ${esc(h.modalidade||'envio não identificado')} · ${h.total||0} peças · ${(h.arts||[]).length} arte(s)</div></div>
+function renderHist(){const q=nrm($('#hq').value);const l=hist.filter(h=>!q||nrm(h.pedido).includes(q)||nrm(h.cliente).includes(q));$('#hInfo').textContent=`${hist.length} ficha(s) guardada(s) · cada ficha é apagada sozinha ${RETD()} dias depois de salva (mude em Padrões).`+(q?` · ${l.length} encontrada(s)`:'');
+ $('#hl').innerHTML=l.length?l.map(h=>`<div class="hr"><div><b>${esc(h.pedido||'Sem pedido')}</b> — ${esc(h.cliente||'sem cliente')}<div class="m">${esc((MODELS[h.modelo||'polo']||MODELS.polo).nome)} · ${new Date(h.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})} · ${esc(h.modalidade||'envio não identificado')} · ${h.total||0} peças · ${(h.arts||[]).length} arte(s) · apaga em ${Math.max(1,expIn(h))} dia(s)</div></div>
  <div class="bt"><button class="sm" data-open="${esc(h.id)}">Abrir</button><button class="sm" data-reprint="${esc(h.id)}">Reimprimir</button></div></div>`).join(''):'<p class="hint">Nenhuma ficha salva ainda. As fichas são salvas ao imprimir ou gerar o PDF.</p>'}
 $('#hq').addEventListener('input',renderHist);
 $('#hl').addEventListener('click',async e=>{const o=e.target.closest('[data-open]'),r=e.target.closest('[data-reprint]');if(o){await openFicha(o.dataset.open)}if(r){await openFicha(r.dataset.reprint);$('#aPrint').click()}});
@@ -770,13 +775,17 @@ $('#bHist').addEventListener('click',async()=>{$('#mHist').classList.add('open')
 $('#bCfg').addEventListener('click',()=>{const c=C();$('#cfgT').textContent='Padrões — '+M.nome;
  $('#cfgF').innerHTML=[['label','Nome escrito entre os desenhos'],['cor','Cor padrão da peça'],['tecido','Tecido / malha'],...M.det].map(([k,l])=>`<label class="f">${l}<input data-c="${k}" value="${esc(c[k]||'')}"></label>`).join('');
  $('#cfgS').innerHTML=Object.entries(POS).map(([k,p])=>`<label class="f">${p.l}<input type="number" min="3" max="90" data-cw="${k}" value="${c.w[k]}"></label>`).join('');
- $('#mCfg').classList.add('open')});
-$('#cfgSave').addEventListener('click',async()=>{const c=C(),old={...c};$$('[data-c]').forEach(i=>c[i.dataset.c]=i.value.trim());$$('[data-cw]').forEach(i=>c.w[i.dataset.cw]=Math.max(3,Math.min(90,+i.value||c.w[i.dataset.cw])));
+ $('#cfgRet').value=String(RETD());$('#mCfg').classList.add('open')});
+$('#cfgSave').addEventListener('click',async()=>{cfg.ret=+$('#cfgRet').value||30;const c=C(),old={...c};$$('[data-c]').forEach(i=>c[i.dataset.c]=i.value.trim());$$('[data-cw]').forEach(i=>c.w[i.dataset.cw]=Math.max(3,Math.min(90,+i.value||c.w[i.dataset.cw])));
  for(const k of['cor','tecido',...M.det.map(d=>d[0])])if(st[k]===old[k]||!st[k])st[k]=c[k];
  try{localStorage.setItem('ficha_cfg',JSON.stringify(cfg))}catch(e){}
  const k=await caps();if(k.db&&k.uid){try{await k.db.doc('data/users/'+k.uid+'/config').set({kind:'config2',...clone(cfg)})}catch(e){}}
  closeModals();fillForm();toast('Padrões salvos.')});
 
+/* ---------- tema ---------- */
+const themeBtn=$('#bTheme');const isLight=()=>document.documentElement.getAttribute('data-theme')==='light';
+const themeLbl=()=>{themeBtn.textContent=isLight()?'🌙 Escuro':'☀️ Claro'};themeLbl();
+themeBtn.addEventListener('click',()=>{const t=isLight()?'dark':'light';document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('ficha_theme',t)}catch(e){}themeLbl()});
 /* ---------- start ---------- */
 fillForm();
 caps().then(async k=>{if(k.db&&k.uid){try{const s=await k.db.doc('data/users/'+k.uid+'/config').get();if(s.exists){const c={...s.data()};delete c.kind;const lm=cfg.lastModel;cfg=mergeCfg(cfg,c);if(lm)cfg.lastModel=lm;if(!st.id&&!st.cliente&&!st.arts.length){const m=curModel;st=blank();setModel(m);fillForm()}}}catch(e){}}
