@@ -559,17 +559,17 @@ function groupItens(a){const out=[];if(!Array.isArray(a))return out;for(const it
   const mo=it&&MODELS[it.modelo]?it.modelo:null;let v=out.find(x=>norm(x.cor)===norm(cor)&&norm(x.est)===norm(est)&&x.modelo===mo);if(!v){v={cor,est,grade:{},modelo:mo};out.push(v)}for(const k in g)v.grade[k]=(v.grade[k]||0)+g[k];}
  return out}
 function normItens(a){const g={};if(!Array.isArray(a))return g;for(const it of a){const k=SZMAP[String(it&&it.tamanho||'').toLowerCase().trim()]||(SIZES.includes(String(it&&it.tamanho||'').toUpperCase().trim())?String(it.tamanho).toUpperCase().trim():null);const q=parseInt(it&&it.quantidade);if(k&&q>0)g[k]=(g[k]||0)+q}return g}
-function heur(t){const r={};const g=(re)=>{const m=t.match(re);return m?m[1].trim():null};
+function fixEnc(t){return t.replace(/(?:\u0000[\u0001-ÿ]){4,}/g,m=>{const d=m.replace(/\u0000/g,'').split('').map(c=>String.fromCharCode(c.charCodeAt(0)+29)).join('');return /^[\x20-\x7e]+$/.test(d)?' '+d+' ':' '})};function heur(t){const r={};r.obs=((t.match(/\binternal?\s*:\s*([^\n|]{3,200})/i)||[])[1]||'').trim()||null;const g=(re)=>{const m=t.match(re);return m?m[1].trim():null};
  r.pedido=g(/(?:pedido|venda|order\s*id|pack\s*id|n[ºo°]\s*do\s*pedido)\s*[:#nº°\-]*\s*([A-Z0-9][A-Z0-9\-]{5,})/i);
  r.rastreio=g(/\b([A-Z]{2}\d{9}BR)\b/)||g(/\b(BR\d{10,}[A-Z]?)\b/)||g(/\b(SPX[A-Z0-9]{6,})\b/i)||g(/\b(MEL[A-Z0-9]{6,})\b/);
  if(r.pedido&&r.rastreio&&r.pedido===r.rastreio)r.pedido=null;
  if(!r.pedido){const e=t.match(/envio\s*[:#nº°]*\s*(\d[\d ]{6,22}\d)/i);if(e)r.pedido=e[1].replace(/\s+/g,'')}
  r.cliente=((t)=>{const L=t.split(/\n/).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);for(let i=1;i<L.length;i++)if(/^(endere[çc]o|end\.?|rua|cep)\b/i.test(L[i])){let n=L[i-1].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();if(n.length>=3&&!/\d|:/.test(n))return n}return null})(t)||g(/destinat[áa]rio\s*[:\-]?\s*([^\n]{3,60})/i);
  r.data_pedido=g(/(?:data\s*(?:do|da|de)?\s*(?:pedido|venda|compra)|comprado\s*em|order\s*date|criado\s*em)\s*[:\-]?\s*(\d{1,2}[\/\.\-]\d{1,2}(?:[\/\.\-]\d{2,4})?|\d{1,2}\s*(?:de\s*)?[a-zç]{3,9}\.?(?:\s*(?:de\s*)?\d{2,4})?)/i);
- r.modalidade=/flex/i.test(t)?'Mercado Envios Flex':/mercado\s*(envios|livre)/i.test(t)?'Mercado Livre Envios':/shopee\s*xpress|\bSPX\b/i.test(t)?'Shopee Xpress':/sedex/i.test(t)?'Correios SEDEX':/\bPAC\b/.test(t)?'Correios PAC':/correios/i.test(t)?'Correios':/coleta/i.test(t)?'Coleta':null;
+ r.modalidade=/flex/i.test(t)?'Mercado Envios Flex':/despachar\s*:|\bXSP\d|\benvio\s*:\s*\d/i.test(t)?'Mercado Livre Envios':/mercado\s*(envios|livre)/i.test(t)?'Mercado Livre Envios':/shopee\s*xpress|\bSPX\b/i.test(t)?'Shopee Xpress':/sedex/i.test(t)?'Correios SEDEX':/\bPAC\b/.test(t)?'Correios PAC':/correios/i.test(t)?'Correios':/coleta/i.test(t)?'Coleta':null;
  r.cor=g(/\bcor\s*[:\-]\s*([A-Za-zÀ-ú][A-Za-zÀ-ú ]{2,24}?)(?=\s*(?:[,;|\n]|tam|$))/i);
  r.itens=parseItens(t);
- r.plataforma=/mercado\s*(livre|envios)/i.test(t)?'Mercado Livre':/shopee/i.test(t)?'Shopee':null;return r}
+ r.plataforma=/mercado\s*(livre|envios)|despachar\s*:|\bXSP\d|\benvio\s*:\s*\d/i.test(t)?'Mercado Livre':/shopee/i.test(t)?'Shopee':null;return r}
 drop($('#dLabel'),$('#fLabel'),fs=>fs[0]&&readLabel(fs[0]));
 function loadScript(u){return new Promise((r,j)=>{const s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s)})}
 async function ocr(img){if(!window.Tesseract)await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');
@@ -578,7 +578,7 @@ async function readLabel(file){const stE=$('#lblSt');stE.textContent='Lendo etiq
  try{let text='',img=null;
   if(/pdf/i.test(file.type)||/\.pdf$/i.test(file.name)){const doc=await pdfDoc(file);
    for(let n=1;n<=Math.min(2,doc.numPages);n++){const tc=await(await doc.getPage(n)).getTextContent();text+=tc.items.map(i=>i.str+(i.hasEOL?'\n':' ')).join('')+'\n'}
-   img=await toBlob(await pdfPage(doc,1,1800))}
+   text=fixEnc(text);img=await toBlob(await pdfPage(doc,1,1800))}
   else img=file;
   let res=null,used='';const c=await caps();
   if(c.sample){try{const lim=await c.sample.limits().catch(()=>null);const opt={modelTier:'default'};if(lim?.images&&img)opt.images=[img];
@@ -602,7 +602,7 @@ async function readLabel(file){const stE=$('#lblSt');stE.textContent='Lendo etiq
   if(Object.keys(gi).length){st.grade=gi;st.gradeSrc='etiqueta';renderGrade();grMsg=vars.length>1?' Tamanhos de cada folha já preenchidos.':' Tamanhos: <b>'+SIZES.filter(k=>gi[k]).map(k=>k+' ×'+gi[k]).join(', ')+'</b> (lidos da etiqueta).'}
   let corMsg='';if(vars.length){st.cor=vars[0].cor;st.corSrc='etiqueta';$('#corIn').value=st.cor;renderCores();corMsg=vars.length>1?` <b>Pedido com ${vars.length} folhas</b> (${vars.map((x,i)=>esc(vLabel(x,i))).join(' | ')}): uma folha para cada cor/estampa — veja no passo 2.`:' Cor da peça: <b>'+esc(st.cor)+'</b> (lida da etiqueta).'}
   else if(!corL){st.cor='Preta';st.corSrc='etiqueta';$('#corIn').value=st.cor;renderCores();corMsg=' Cor não escrita na etiqueta: considerei <b>Preta</b> (troque abaixo se for outra).'}else{st.corSrc='etiqueta';st.cor=canonCor(corL);$('#corIn').value=st.cor;renderCores();corMsg=' Cor da peça: <b>'+esc(st.cor)+'</b> (lida da etiqueta).'}
-  miss=new Set(['cliente','pedido','modalidade'].filter(k=>!st[k]));autoRef();
+  {const ob=v(res.obs||res.observacao);if(ob&&!String(st.obs||'').trim()){st.obs=ob;corMsg+=' Observação interna lida da etiqueta.'}}miss=new Set(['cliente','pedido','modalidade'].filter(k=>!st[k]));autoRef();
   for(const i of $$('[data-k]'))i.value=st[i.dataset.k]||'';renderVars();
   const ok=['cliente','pedido','modalidade'].filter(k=>st[k]).length+(dp?1:0);
   stE.innerHTML=`Etiqueta lida (${esc(used)}): <b>${ok} de 4</b> campos principais reconhecidos${miss.size?' — confira os destacados':''}${dp?'':'. Data do pedido não estava na etiqueta: usei a de hoje'}.${corMsg}${grMsg||' Tamanhos não encontrados — selecione abaixo.'}`;
