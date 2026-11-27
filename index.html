@@ -84,6 +84,8 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
 .x{border:0;background:var(--soft);border-radius:10px;width:40px;height:40px;cursor:pointer;font-size:18px}
 .hr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border-top:1px solid var(--line);padding:10px 0}
 .hr .m{font-size:13px;color:var(--mut)}
+.cn{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}.cnb{min-height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--card2);color:var(--ink);font-weight:700;font-size:14px;cursor:pointer}.cnb.on{border-color:var(--blue);background:var(--soft);color:var(--blue);box-shadow:0 0 0 1px var(--blue) inset}.cnb small{font-weight:600;opacity:.75;margin-left:4px}
+.tag{display:inline-block;font-size:11px;font-weight:800;border-radius:6px;padding:1px 7px;margin-right:6px;vertical-align:1px;letter-spacing:.02em}.tag.ml{background:#ffe60033;color:#b89a00}.tag.sh{background:#ee4d2d26;color:#ee4d2d}.tag.lf{background:#22c55e26;color:#16a34a}.tag.ot{background:var(--soft);color:var(--mut)}
 .hr .bt{display:flex;gap:6px}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:30;opacity:0;pointer-events:none;transition:.2s;max-width:92vw}
 .toast.on{opacity:1}
@@ -111,6 +113,8 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
     <h2><span class="n">1</span>Etiqueta de envio</h2>
     <label class="drop" id="dLabel"><input type="file" id="fLabel" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"><b>Enviar etiqueta</b> — PDF, JPG ou PNG<br><span style="font-size:13px">clique ou solte o arquivo aqui</span></label>
     <div class="st" id="lblSt"></div>
+    <div style="font-size:13px;font-weight:600;color:var(--mut);margin:4px 0 6px">Canal da venda</div>
+    <div class="cn" id="canalF"><button type="button" class="cnb" data-canal="ml">Mercado Livre</button><button type="button" class="cnb" data-canal="sh">Shopee</button><button type="button" class="cnb" data-canal="lf">🏪 Loja Física</button></div>
     <div class="grid">
       <label class="f" id="w_cliente">Cliente<input data-k="cliente" autocomplete="off"></label>
       <label class="f" id="w_pedido">Pedido / OS<input data-k="pedido" autocomplete="off"></label>
@@ -122,7 +126,7 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
     </div>
     <datalist id="modl"><option>Mercado Livre Envios</option><option>Mercado Envios Flex</option><option>Shopee Xpress</option><option>Correios SEDEX</option><option>Correios PAC</option><option>Coleta</option><option>Retirada</option></datalist>
     <datalist id="corl"><option>Branca</option><option>Preta</option><option>Cinza mescla</option><option>Chumbo</option><option>Off-white</option><option>Azul marinho</option><option>Vermelha</option><option>Bordô</option></datalist>
-    <datalist id="platl"><option>Mercado Livre</option><option>Shopee</option><option>Venda direta</option><option>Instagram</option></datalist>
+    <datalist id="platl"><option>Mercado Livre</option><option>Shopee</option><option>Loja Física</option><option>Venda direta</option><option>Instagram</option></datalist>
     <div id="dup"></div>
   </div>
 
@@ -178,6 +182,7 @@ details{margin-top:12px}summary{cursor:pointer;font-weight:600;font-size:14px;co
 <div class="modal" id="mHist"><div class="box">
   <h3>🔎 Consultar fichas <button class="x" data-close>✕</button></h3>
   <label class="f">Buscar pelo nome do cliente ou número do pedido<input id="hq" autocomplete="off" placeholder="Ex.: Maria, 261127CEB92S2X, 4862…"></label>
+  <div class="cn" id="canalH" style="margin-top:10px"></div>
   <div class="hint" id="hInfo"></div>
   <div id="hl" style="margin-top:10px"></div>
 </div></div>
@@ -750,10 +755,23 @@ function checkDup(){const p=nrm(st.pedido);const box=$('#dup');if(!p){box.innerH
  const m=hist.filter(h=>h.id!==st.id&&nrm(h.pedido)===p&&(!h.cor||!st.cor||nrm(h.cor)===nrm(st.cor)));
  box.innerHTML=m.length?`<div class="dup">⚠ Já existe ficha para o pedido <b>${esc(st.pedido)}</b> (${esc(m[0].cliente||'sem cliente')}, salva em ${new Date(m[0].updatedAt).toLocaleDateString('pt-BR')}). <button data-open="${esc(m[0].id)}">Abrir a anterior</button> ou continue para criar reimpressão/complemento.</div>`:''}
 $('#dup').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)openFicha(b.dataset.open)});
-function renderHist(){const q=nrm($('#hq').value);const l=hist.filter(h=>!q||nrm(h.pedido).includes(q)||nrm(h.cliente).includes(q));$('#hInfo').textContent=`${hist.length} ficha(s) guardada(s) · cada ficha é apagada sozinha ${RETD()} dias depois de salva (mude em Padrões).`+(q?` · ${l.length} encontrada(s)`:'');
- $('#hl').innerHTML=l.length?l.map(h=>`<div class="hr"><div><b>${esc(h.pedido||'Sem pedido')}</b> — ${esc(h.cliente||'sem cliente')}<div class="m">${esc((MODELS[h.modelo||'polo']||MODELS.polo).nome)} · ${new Date(h.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})} · ${esc(h.modalidade||'envio não identificado')} · ${h.total||0} peças · ${(h.arts||[]).length} arte(s) · apaga em ${Math.max(1,expIn(h))} dia(s)</div></div>
+const CANAIS={ml:'Mercado Livre',sh:'Shopee',lf:'Loja Física',ot:'Outros'};
+function canalOf(p){const n=nrm(p||'');return !n?'ot':/mercado|meli|\bml\b/.test(n)?'ml':/shopee/.test(n)?'sh':/loja|fisic|balcao|retirada/.test(n)?'lf':'ot'}
+let histCanal='';
+function renderHist(){const q=nrm($('#hq').value);const cnt={ml:0,sh:0,lf:0,ot:0};hist.forEach(h=>cnt[canalOf(h.plataforma)]++);
+ $('#canalH').innerHTML=`<button type="button" class="cnb${histCanal?'':' on'}" data-hc="">Todos<small>${hist.length}</small></button>`+Object.entries(CANAIS).filter(([k])=>k!=='ot'||cnt.ot).map(([k,v])=>`<button type="button" class="cnb${histCanal===k?' on':''}" data-hc="${k}">${v}<small>${cnt[k]}</small></button>`).join('');
+ const l=hist.filter(h=>(!histCanal||canalOf(h.plataforma)===histCanal)&&(!q||nrm(h.pedido).includes(q)||nrm(h.cliente).includes(q)));$('#hInfo').textContent=`${hist.length} ficha(s) guardada(s) · cada ficha é apagada sozinha ${RETD()} dias depois de salva (mude em Padrões).`+(q||histCanal?` · ${l.length} encontrada(s)`:'');
+ $('#hl').innerHTML=l.length?l.map(h=>`<div class="hr"><div><span class="tag ${canalOf(h.plataforma)}">${CANAIS[canalOf(h.plataforma)]}</span><b>${esc(h.pedido||'Sem pedido')}</b> — ${esc(h.cliente||'sem cliente')}<div class="m">${esc((MODELS[h.modelo||'polo']||MODELS.polo).nome)} · ${new Date(h.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})} · ${esc(h.modalidade||'envio não identificado')} · ${h.total||0} peças · ${(h.arts||[]).length} arte(s) · apaga em ${Math.max(1,expIn(h))} dia(s)</div></div>
  <div class="bt"><button class="sm" data-open="${esc(h.id)}">Abrir</button><button class="sm" data-reprint="${esc(h.id)}">Reimprimir</button></div></div>`).join(''):'<p class="hint">Nenhuma ficha salva ainda. As fichas são salvas ao imprimir ou gerar o PDF.</p>'}
 $('#hq').addEventListener('input',renderHist);
+$('#canalH').addEventListener('click',e=>{const b=e.target.closest('[data-hc]');if(!b)return;histCanal=b.dataset.hc;renderHist()});
+/* ---------- canal da venda ---------- */
+function lfPedido(){const d=new Date(),p=x=>String(x).padStart(2,'0');let c;do{c='LF-'+p(d.getDate())+p(d.getMonth()+1)+String(d.getFullYear()).slice(2)+'-'+Math.floor(1000+Math.random()*9000)}while(hist.some(h=>h.pedido===c));return c}
+function updCanal(){const c=st.plataforma?canalOf(st.plataforma):'';$$('#canalF [data-canal]').forEach(b=>b.classList.toggle('on',b.dataset.canal===c))}
+$('#canalF').addEventListener('click',e=>{const b=e.target.closest('[data-canal]');if(!b)return;const c=b.dataset.canal;st.plataforma=CANAIS[c];
+ if(c==='lf'){if(!String(st.pedido||'').trim()){st.pedido=lfPedido();autoRef();miss.delete('pedido');toast('Loja Física: pedido '+st.pedido+' gerado para consulta.')}if(!String(st.modalidade||'').trim()){st.modalidade='Retirada na loja';miss.delete('modalidade')}}
+ for(const i of $$('[data-k]'))i.value=st[i.dataset.k]??'';checkDup();if(!st.vars)renderVars();render()});
+{const _render=render;render=function(){try{updCanal()}catch(e){}return _render.apply(this,arguments)}}
 $('#hl').addEventListener('click',async e=>{const o=e.target.closest('[data-open]'),r=e.target.closest('[data-reprint]');if(o){await openFicha(o.dataset.open)}if(r){await openFicha(r.dataset.reprint);$('#aPrint').click()}});
 async function artsFromDoc(h){const out=[];for(const o of h.arts||[]){try{let data=o.inline;if(!data&&o.assetId){const r=await fetch('/_blob/'+o.assetId);data=await readURL(await r.blob())}if(!data)continue;
    const a={id:'a'+Math.random().toString(36).slice(2,9),name:o.name,data,url:URL.createObjectURL(d2b(data)),aspect:o.aspect,pos:o.pos,cx:o.cx,cy:o.cy,w:o.w,rot:o.rot||0,useNobg:false,assetId:o.assetId};
