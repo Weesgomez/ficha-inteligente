@@ -541,13 +541,13 @@ Regras:
 Exemplo de formato: {"cliente":"Maria Souza","pedido":"2000008123456789","data_pedido":null,"modalidade":"Mercado Livre Envios","transportadora":null,"plataforma":"Mercado Livre","rastreio":null,"cor":null,"itens":[{"tamanho":"M","quantidade":1,"cor":"Branca","modelo":"polo","estampa":"LOGO"},{"tamanho":"M","quantidade":1,"cor":"Azul","modelo":"polo","estampa":"LOGO"}],"etiqueta":null}`;
 const SZMAP={pp:'PP',p:'P',m:'M',g:'G',gg:'GG',xg:'XG',eg:'XG',xxg:'XXG',egg:'XXG',exg:'XXG',xgg:'XXG'};
 function parseItens(t){const out=[];const re=/(?:^|\n|\s)\d{1,2}\s*[.)]\s*(pp|xxg|xgg|exg|egg|gg|xg|eg|p|m|g)\s*-[^\n*]*?\*\s*(\d{1,4})/gi;let m;
- while(m=re.exec(t)){const full=m[0].replace(/\*\s*\d+$/,'');const segs=norm(full.split('-').slice(1).join('-')).split(/[-_\s]+/).filter(Boolean);
+ while(m=re.exec(t)){const full=m[0].replace(/\*\s*\d+$/,'');const segs=norm(full.split('-').slice(1).join('-')).split(/[-_\s]+/).filter(Boolean).flatMap(w=>{const q=w.match(/^(polo|regata|oversized|oversize|over|blusa|moletom|canguru|babylook|baby|camiseta|basica)(.{3,})$/);return q&&colorHex(q[2])?[q[1],q[2]]:[w]});
   let cor=null;for(let i=segs.length-1;i>=0&&!cor;i--){const w=segs[i];if(w.length>=3&&!/^(logo|polo|over|oversized|oversize|regata|machao|camiseta|moletom|moleton|blusa|canguru|basica|estampa|criarestampa|baby|babylook|look|feminina|bl)$/.test(w)&&colorHex(w))cor=segs.slice(i).join(' ')}
   const mo=detectModel(segs);
   const cw=cor?cor.split(' ').length:0;const est=segs.slice(0,segs.length-cw).filter(w=>!/^(polo|over|oversized|oversize|regata|machao|camiseta|moletom|moleton|blusa|canguru|basica|tshirt|hoodie|baby|babylook|look|feminina|fem|bl)$/.test(w)).join('-')||null;
   out.push({tamanho:SZMAP[m[1].toLowerCase()],quantidade:+m[2],cor,modelo:mo,estampa:est})}return out}
 function detectModel(segs){const j=' '+segs.join(' ')+' ';
- if(/ polo /.test(j))return'polo';
+ if(/ polo /.test(j)||segs.some(w=>/^polo/.test(w)))return'polo';
  if(/ (blusa|moletom|canguru|hoodie|moleton) /.test(j))return'moletom';
  if(/ (over|oversized|oversize|regata|machao|machão) /.test(j))return'regata';
  if(/ (baby|babylook|babylok|bl|feminina|fem) /.test(j)||/baby ?look/.test(j))return'babylook';
@@ -559,12 +559,12 @@ function groupItens(a){const out=[];if(!Array.isArray(a))return out;for(const it
   const mo=it&&MODELS[it.modelo]?it.modelo:null;let v=out.find(x=>norm(x.cor)===norm(cor)&&norm(x.est)===norm(est)&&x.modelo===mo);if(!v){v={cor,est,grade:{},modelo:mo};out.push(v)}for(const k in g)v.grade[k]=(v.grade[k]||0)+g[k];}
  return out}
 function normItens(a){const g={};if(!Array.isArray(a))return g;for(const it of a){const k=SZMAP[String(it&&it.tamanho||'').toLowerCase().trim()]||(SIZES.includes(String(it&&it.tamanho||'').toUpperCase().trim())?String(it.tamanho).toUpperCase().trim():null);const q=parseInt(it&&it.quantidade);if(k&&q>0)g[k]=(g[k]||0)+q}return g}
-function fixEnc(t){return t.replace(/(?:\u0000[\u0001-ÿ]){4,}/g,m=>{const d=m.replace(/\u0000/g,'').split('').map(c=>String.fromCharCode(c.charCodeAt(0)+29)).join('');return /^[\x20-\x7e]+$/.test(d)?' '+d+' ':' '})};function heur(t){const r={};r.obs=((t.match(/\binternal?\s*:\s*([^\n|]{3,200})/i)||[])[1]||'').trim()||null;const g=(re)=>{const m=t.match(re);return m?m[1].trim():null};
+function fixEnc(t){return t.replace(/(?:\u0000[\u0001-ÿ]){4,}/g,m=>{const d=m.replace(/\u0000/g,'').split('').map(c=>String.fromCharCode(c.charCodeAt(0)+29)).join('');return /^[\x20-\x7e]+$/.test(d)?' '+d+' ':' '})};function tcase(s){return s.toLowerCase().replace(/(^|\s)(\S)/g,(m,a,b)=>a+b.toUpperCase()).replace(/\s(Da|De|Do|Das|Dos|E)(?=\s)/g,m=>m.toLowerCase())};function heur(t){const r={};r.obs=((t.match(/\binternal?\s*:\s*([^\n|]{3,200})/i)||[])[1]||'').trim()||null;const g=(re)=>{const m=t.match(re);return m?m[1].trim():null};
  r.pedido=g(/(?:pedido|venda|order\s*id|pack\s*id|n[ºo°]\s*do\s*pedido)\s*[:#nº°\-]*\s*([A-Z0-9][A-Z0-9\-]{5,})/i);
  r.rastreio=g(/\b([A-Z]{2}\d{9}BR)\b/)||g(/\b(BR\d{10,}[A-Z]?)\b/)||g(/\b(SPX[A-Z0-9]{6,})\b/i)||g(/\b(MEL[A-Z0-9]{6,})\b/);
  if(r.pedido&&r.rastreio&&r.pedido===r.rastreio)r.pedido=null;
  if(!r.pedido){const e=t.match(/envio\s*[:#nº°]*\s*(\d[\d ]{6,22}\d)/i);if(e)r.pedido=e[1].replace(/\s+/g,'')}
- r.cliente=((t)=>{const L=t.split(/\n/).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);for(let i=1;i<L.length;i++)if(/^(endere[çc]o|end\.?|rua|cep)\b/i.test(L[i])){let n=L[i-1].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();if(n.length>=3&&!/\d|:/.test(n))return n}return null})(t)||g(/destinat[áa]rio\s*[:\-]?\s*([^\n]{3,60})/i);
+ r.cliente=((t)=>{const L=t.split(/\n/).map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);for(let i=1;i<L.length;i++)if(/^(endere[çc]o|end\.?|rua|cep)\b/i.test(L[i])){for(let j=i-1;j>=Math.max(0,i-3);j--){let n=L[j].replace(/\([^)]*\)/g,'').replace(/\([^)]*$/,'').replace(/^[^(]*\)/,'').replace(/\s+/g,' ').trim();if(n.length>=3&&!/\d|:/.test(n))return tcase(n)}}return null})(t)||g(/destinat[áa]rio\s*[:\-]?\s*([^\n]{3,60})/i);
  r.data_pedido=g(/(?:data\s*(?:do|da|de)?\s*(?:pedido|venda|compra)|comprado\s*em|order\s*date|criado\s*em)\s*[:\-]?\s*(\d{1,2}[\/\.\-]\d{1,2}(?:[\/\.\-]\d{2,4})?|\d{1,2}\s*(?:de\s*)?[a-zç]{3,9}\.?(?:\s*(?:de\s*)?\d{2,4})?)/i);
  r.modalidade=/flex/i.test(t)?'Mercado Envios Flex':/despachar\s*:|\bXSP\d|\benvio\s*:\s*\d/i.test(t)?'Mercado Livre Envios':/mercado\s*(envios|livre)/i.test(t)?'Mercado Livre Envios':/shopee\s*xpress|\bSPX\b/i.test(t)?'Shopee Xpress':/sedex/i.test(t)?'Correios SEDEX':/\bPAC\b/.test(t)?'Correios PAC':/correios/i.test(t)?'Correios':/coleta/i.test(t)?'Coleta':null;
  r.cor=g(/\bcor\s*[:\-]\s*([A-Za-zÀ-ú][A-Za-zÀ-ú ]{2,24}?)(?=\s*(?:[,;|\n]|tam|$))/i);
