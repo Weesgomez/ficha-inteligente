@@ -699,10 +699,20 @@ async function allPages(){const pages=[];const V=st.vars,multi=V&&V.length>1,ori
  for(let i=0;i<V.length;i++){if(i!==st.varIdx)await goVar(i,false,true);await new Promise(r=>setTimeout(r,30));await one()}
  if(st.varIdx!==orig)await goVar(orig,false,true);renderVars();return pages}
 function donePages(n){toast(n>1?`${n} folhas geradas (uma por cor/estampa) e salvas no histórico.`:'Ficha salva no histórico.',4500)}
-$('#aPrint').addEventListener('click',async()=>{if(drag)return;busy(true);try{const pages=await allPages();
-  $('#printArea').innerHTML=pages.map(u=>`<img src="${u}" alt="">`).join('');await new Promise(r=>setTimeout(r,120));
-  printed=false;try{window.print()}catch(e){}await new Promise(r=>setTimeout(r,400));
-  if(!printed){toast('A impressão direta foi bloqueada aqui — gerando o PDF para você imprimir.',4500);await savePdf(pages)}else donePages(pages.length)}finally{busy(false)}});
+let readyPages=null;const pBtn=$('#aPrint');
+function resetPrintBtn(){readyPages=null;pBtn.textContent='IMPRIMIR';pBtn.style.background='';pBtn.style.boxShadow=''}
+function printNow(n){printed=false;try{window.print()}catch(e){}return new Promise(r=>setTimeout(()=>r(printed),400))}
+document.addEventListener('input',e=>{if(readyPages&&e.target.closest('#form'))resetPrintBtn()});
+document.addEventListener('click',e=>{if(readyPages&&e.target.closest('#form button,#form .chip,#models'))resetPrintBtn()});
+pBtn.addEventListener('click',async()=>{if(drag)return;
+ if(readyPages){const n=readyPages.length;const ok=await printNow(n);if(ok){resetPrintBtn();donePages(n)}else toast('O Chrome não abriu a janela de impressão. Use SALVAR PDF e imprima o arquivo.',6000);return}
+ busy(true);try{const pages=await allPages();
+  $('#printArea').innerHTML=pages.map(u=>`<img src="${u}" alt="">`).join('');
+  await Promise.all([...$$('#printArea img')].map(i=>i.decode().catch(()=>{})));
+  if(await printNow(pages.length)){donePages(pages.length);return}
+  if(window.claude){toast('A impressão direta foi bloqueada aqui — gerando o PDF para você imprimir.',4500);await savePdf(pages);return}
+  readyPages=pages;pBtn.textContent='🖨 IMPRIMIR AGORA';pBtn.style.background='#16a34a';pBtn.style.boxShadow='0 0 0 4px #16a34a55';
+  toast(pages.length>1?`${pages.length} folhas prontas — clique em IMPRIMIR AGORA.`:'Folha pronta — clique em IMPRIMIR AGORA.',6000)}finally{busy(false)}});
 $('#aPdf').addEventListener('click',async()=>{busy(true);try{const pages=await allPages();if(await savePdf(pages))toast(pages.length>1?`PDF com ${pages.length} folhas gerado (uma por cor/estampa).`:'PDF A4 gerado.',4500);else donePages(pages.length)}finally{busy(false)}});
 $('#aEdit').addEventListener('click',()=>{const f=$('.pend input')||$('.art.need select')||($('#gradeW').textContent?$('#sizes .chip'):null)||$('[data-k=cliente]');
  $('#form').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>f&&f.focus(),350)});
